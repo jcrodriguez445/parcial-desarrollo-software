@@ -5,6 +5,8 @@ from app.database import inicializar_bd, obtener_sesion
 from app.modelos import Empleado, EmpleadoCrear, EmpleadoLeer, Proyecto, ProyectoCrear, ProyectoLeer, EstadoEmpleado, EstadoProyecto, HistorialEmpleadoEliminado, HistorialProyectoEliminado
 import app.crud as crud
 
+
+
 app = FastAPI(title="Sistema de Gestión de Proyectos - Parcial", version="1.0")
 
 @app.on_event("startup")
@@ -73,19 +75,16 @@ def proyectos_del_empleado_endpoint(empleado_id: int, sesion: Session = Depends(
 def empleados_del_proyecto_endpoint(proyecto_id: int, sesion: Session = Depends(obtener_sesion)):
     return crud.empleados_de_proyecto(sesion, proyecto_id)
 
-@app.get("/historial/empleados")
+
+@app.get("/historial/empleados", response_model=List[HistorialEmpleadoEliminado])
 def obtener_historial_empleados(sesion: Session = Depends(obtener_sesion)):
     return sesion.exec(select(HistorialEmpleadoEliminado)).all()
 
-@app.get("/historial/proyectos")
+@app.get("/historial/proyectos", response_model=List[HistorialProyectoEliminado])
 def obtener_historial_proyectos(sesion: Session = Depends(obtener_sesion)):
     return sesion.exec(select(HistorialProyectoEliminado)).all()
 
-@app.delete("/historial/empleados")
-def limpiar_historial_empleados(sesion: Session = Depends(obtener_sesion)):
-    sesion.exec(select(HistorialEmpleadoEliminado)).all()
-    registros = sesion.exec(select(HistorialEmpleadoEliminado)).all()
-    for r in registros:
-        sesion.delete(r)
-    sesion.commit()
-    return {"ok": True, "mensaje": "Historial de empleados limpiado"}
+
+@app.get("/")
+def raiz():
+    return {"mensaje": "API de Gestión de Proyectos funcionando correctamente"}

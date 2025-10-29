@@ -13,8 +13,7 @@ engine = create_engine(
 )
 
 def inicializar_bd():
-    # importamos modelos aquí para evitar import circular
-    from app.modelos import Empleado, Proyecto, VínculoProyectoEmpleado, HistorialEmpleadoEliminado, HistorialProyectoEliminado
+    from app.modelos import Empleado, Proyecto, VínculoProyectoEmpleado
     SQLModel.metadata.create_all(engine)
 
 def obtener_sesion():

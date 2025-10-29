@@ -3,6 +3,7 @@ from sqlmodel import SQLModel, Field, Relationship
 from enum import Enum
 from datetime import datetime
 
+
 class EstadoEmpleado(str, Enum):
     ACTIVO = "activo"
     INACTIVO = "inactivo"
@@ -68,4 +69,4 @@ class HistorialProyectoEliminado(SQLModel, table=True):
     presupuesto: float
     estado: str
     gerente_id: Optional[int]
-    fecha_eliminacion: datetime = Field(default_factory=datetime.now
+    fecha_eliminacion: datetime = Field(default_factory=datetime.now)
