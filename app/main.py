@@ -72,3 +72,11 @@ def proyectos_del_empleado_endpoint(empleado_id: int, sesion: Session = Depends(
 @app.get("/proyectos/{proyecto_id}/empleados", response_model=List[EmpleadoLeer])
 def empleados_del_proyecto_endpoint(proyecto_id: int, sesion: Session = Depends(obtener_sesion)):
     return crud.empleados_de_proyecto(sesion, proyecto_id)
+
+@app.get("/historial/empleados")
+def obtener_historial_empleados(sesion: Session = Depends(obtener_sesion)):
+    return sesion.exec(select(HistorialEmpleadoEliminado)).all()
+
+@app.get("/historial/proyectos")
+def obtener_historial_proyectos(sesion: Session = Depends(obtener_sesion)):
+    return sesion.exec(select(HistorialProyectoEliminado)).all()
