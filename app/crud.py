@@ -1,4 +1,4 @@
-ffrom sqlmodel import select, Session
+from sqlmodel import select, Session
 from fastapi import HTTPException, status
 from app.modelos import Empleado, Proyecto, VínculoProyectoEmpleado
 
