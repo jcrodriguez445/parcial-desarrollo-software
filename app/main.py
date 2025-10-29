@@ -80,3 +80,12 @@ def obtener_historial_empleados(sesion: Session = Depends(obtener_sesion)):
 @app.get("/historial/proyectos")
 def obtener_historial_proyectos(sesion: Session = Depends(obtener_sesion)):
     return sesion.exec(select(HistorialProyectoEliminado)).all()
+
+@app.delete("/historial/empleados")
+def limpiar_historial_empleados(sesion: Session = Depends(obtener_sesion)):
+    sesion.exec(select(HistorialEmpleadoEliminado)).all()
+    registros = sesion.exec(select(HistorialEmpleadoEliminado)).all()
+    for r in registros:
+        sesion.delete(r)
+    sesion.commit()
+    return {"ok": True, "mensaje": "Historial de empleados limpiado"}
