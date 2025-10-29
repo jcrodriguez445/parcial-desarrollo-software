@@ -33,3 +33,22 @@ def actualizar_empleado_endpoint(empleado_id: int, payload: EmpleadoCrear, sesio
 @app.delete("/empleados/{empleado_id}")
 def eliminar_empleado_endpoint(empleado_id: int, sesion: Session = Depends(obtener_sesion)):
     return crud.eliminar_empleado(sesion, empleado_id)
+
+# ----- PROYECTOS -----
+
+@app.post("/proyectos", response_model=ProyectoLeer, status_code=201)
+def crear_proyecto_endpoint(proyecto: ProyectoCrear, sesion: Session = Depends(obtener_sesion)):
+    nuevo = Proyecto.from_orm(proyecto)
+    return crud.crear_proyecto(sesion, nuevo)
+
+@app.get("/proyectos", response_model=List[ProyectoLeer])
+def listar_proyectos_endpoint(estado: EstadoProyecto | None = Query(None), presupuesto_min: float | None = Query(None), sesion: Session = Depends(obtener_sesion)):
+    return crud.listar_proyectos(sesion, estado.value if estado else None, presupuesto_min)
+
+@app.get("/proyectos/{proyecto_id}", response_model=ProyectoLeer)
+def obtener_proyecto_endpoint(proyecto_id: int, sesion: Session = Depends(obtener_sesion)):
+    return crud.obtener_proyecto(sesion, proyecto_id)
+
+@app.delete("/proyectos/{proyecto_id}")
+def eliminar_proyecto_endpoint(proyecto_id: int, cascada: bool | None = Query(False), sesion: Session = Depends(obtener_sesion)):
+    return crud.eliminar_proyecto(sesion, proyecto_id, cascada=cascada)
