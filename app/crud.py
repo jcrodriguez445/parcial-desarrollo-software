@@ -112,6 +112,16 @@ def eliminar_proyecto(sesion: Session, proyecto_id: int, cascada: bool = False):
     sesion.commit()
     return {"ok": True, "mensaje": "Proyecto eliminado y registrado en historial"}
 
+def actualizar_proyecto(sesion: Session, proyecto_id: int, datos: dict):
+    proyecto = obtener_proyecto(sesion, proyecto_id)
+    for k, v in datos.items():
+        setattr(proyecto, k, v)
+    sesion.add(proyecto)
+    sesion.commit()
+    sesion.refresh(proyecto)
+    return proyecto
+
+
 # ----- ASIGNACIONES -----
 
 def asignar_empleado(sesion: Session, proyecto_id: int, empleado_id: int):
@@ -138,6 +148,23 @@ def desasignar_empleado(sesion: Session, proyecto_id: int, empleado_id: int):
     sesion.delete(enlace)
     sesion.commit()
     return {"ok": True}
+
+def reasignar_gerente(sesion: Session, proyecto_id: int, nuevo_gerente_id: int):
+    proyecto = obtener_proyecto(sesion, proyecto_id)
+    nuevo_gerente = sesion.get(Empleado, nuevo_gerente_id)
+    
+    if not nuevo_gerente:
+        raise HTTPException(status_code=404, detail="El nuevo gerente no existe")
+    
+    if proyecto.gerente_id == nuevo_gerente_id:
+        raise HTTPException(status_code=409, detail="El empleado ya es el gerente del proyecto")
+
+    proyecto.gerente_id = nuevo_gerente_id
+    sesion.add(proyecto)
+    sesion.commit()
+    sesion.refresh(proyecto)
+    return {"ok": True, "mensaje": f"Gerente reasignado correctamente al empleado con ID {nuevo_gerente_id}"}
+
 
 def proyectos_de_empleado(sesion: Session, empleado_id: int):
     emp = obtener_empleado(sesion, empleado_id)

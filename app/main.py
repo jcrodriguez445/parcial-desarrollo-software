@@ -55,6 +55,11 @@ def obtener_proyecto_endpoint(proyecto_id: int, sesion: Session = Depends(obtene
 def eliminar_proyecto_endpoint(proyecto_id: int, cascada: bool | None = Query(False), sesion: Session = Depends(obtener_sesion)):
     return crud.eliminar_proyecto(sesion, proyecto_id, cascada=cascada)
 
+@app.put("/proyectos/{proyecto_id}", response_model=ProyectoLeer)
+def actualizar_proyecto_endpoint(proyecto_id: int, payload: ProyectoCrear, sesion: Session = Depends(obtener_sesion)):
+    return crud.actualizar_proyecto(sesion, proyecto_id, payload.dict())
+
+
 # ----- ASIGNACIONES -----
 
 @app.post("/proyectos/{proyecto_id}/asignar/{empleado_id}")
@@ -64,6 +69,11 @@ def asignar_empleado_endpoint(proyecto_id: int, empleado_id: int, sesion: Sessio
 @app.post("/proyectos/{proyecto_id}/desasignar/{empleado_id}")
 def desasignar_empleado_endpoint(proyecto_id: int, empleado_id: int, sesion: Session = Depends(obtener_sesion)):
     return crud.desasignar_empleado(sesion, proyecto_id, empleado_id)
+
+@app.put("/proyectos/{proyecto_id}/reasignar-gerente/{nuevo_gerente_id}")
+def reasignar_gerente_endpoint(proyecto_id: int, nuevo_gerente_id: int, sesion: Session = Depends(obtener_sesion)):
+    return crud.reasignar_gerente(sesion, proyecto_id, nuevo_gerente_id)
+
 
 # ----- CONSULTAS RELACIONALES -----
 
