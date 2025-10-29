@@ -52,3 +52,23 @@ def obtener_proyecto_endpoint(proyecto_id: int, sesion: Session = Depends(obtene
 @app.delete("/proyectos/{proyecto_id}")
 def eliminar_proyecto_endpoint(proyecto_id: int, cascada: bool | None = Query(False), sesion: Session = Depends(obtener_sesion)):
     return crud.eliminar_proyecto(sesion, proyecto_id, cascada=cascada)
+
+# ----- ASIGNACIONES -----
+
+@app.post("/proyectos/{proyecto_id}/asignar/{empleado_id}")
+def asignar_empleado_endpoint(proyecto_id: int, empleado_id: int, sesion: Session = Depends(obtener_sesion)):
+    return crud.asignar_empleado(sesion, proyecto_id, empleado_id)
+
+@app.post("/proyectos/{proyecto_id}/desasignar/{empleado_id}")
+def desasignar_empleado_endpoint(proyecto_id: int, empleado_id: int, sesion: Session = Depends(obtener_sesion)):
+    return crud.desasignar_empleado(sesion, proyecto_id, empleado_id)
+
+# ----- CONSULTAS RELACIONALES -----
+
+@app.get("/empleados/{empleado_id}/proyectos", response_model=List[ProyectoLeer])
+def proyectos_del_empleado_endpoint(empleado_id: int, sesion: Session = Depends(obtener_sesion)):
+    return crud.proyectos_de_empleado(sesion, empleado_id)
+
+@app.get("/proyectos/{proyecto_id}/empleados", response_model=List[EmpleadoLeer])
+def empleados_del_proyecto_endpoint(proyecto_id: int, sesion: Session = Depends(obtener_sesion)):
+    return crud.empleados_de_proyecto(sesion, proyecto_id)
