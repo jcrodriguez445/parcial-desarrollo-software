@@ -111,3 +111,30 @@ def proyectos_de_empleado(sesion: Session, empleado_id: int):
 def empleados_de_proyecto(sesion: Session, proyecto_id: int):
     proj = obtener_proyecto(sesion, proyecto_id)
     return proj.empleados
+
+
+def eliminar_empleado(sesion: Session, empleado_id: int):
+    from app.modelos import HistorialEmpleadoEliminado
+    emp = obtener_empleado(sesion, empleado_id)
+
+    proyectos_gerenciados = sesion.exec(select(Proyecto).where(Proyecto.gerente_id == emp.id)).all()
+    if proyectos_gerenciados:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Empleado es gerente de uno o más proyectos y no puede eliminarse")
+
+    # Registrar en historial antes de eliminar
+    historial = HistorialEmpleadoEliminado(
+        nombre=emp.nombre,
+        especialidad=emp.especialidad,
+        salario=emp.salario,
+        estado=emp.estado.value
+    )
+    sesion.add(historial)
+
+    # Eliminar vínculos
+    vínculos = sesion.exec(select(VínculoProyectoEmpleado).where(VínculoProyectoEmpleado.empleado_id == emp.id)).all()
+    for v in vínculos:
+        sesion.delete(v)
+
+    sesion.delete(emp)
+    sesion.commit()
+    return {"ok": True, "mensaje": "Empleado eliminado y registrado en historial"}
