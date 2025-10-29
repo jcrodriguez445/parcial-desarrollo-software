@@ -76,3 +76,38 @@ def eliminar_proyecto(sesion: Session, proyecto_id: int, cascada: bool = False):
     sesion.delete(proj)
     sesion.commit()
     return {"ok": True, "mensaje": "Proyecto eliminado y registrado en historial"}
+
+# ----- ASIGNACIONES -----
+
+def asignar_empleado(sesion: Session, proyecto_id: int, empleado_id: int):
+    obtener_proyecto(sesion, proyecto_id)
+    emp = sesion.get(Empleado, empleado_id)
+    if not emp:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Empleado no encontrado")
+    existe = sesion.exec(select(VínculoProyectoEmpleado).where(
+        (VínculoProyectoEmpleado.proyecto_id == proyecto_id) & (VínculoProyectoEmpleado.empleado_id == empleado_id)
+    )).first()
+    if existe:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Empleado ya asignado al proyecto")
+    enlace = VínculoProyectoEmpleado(proyecto_id=proyecto_id, empleado_id=empleado_id)
+    sesion.add(enlace)
+    sesion.commit()
+    return {"ok": True}
+
+def desasignar_empleado(sesion: Session, proyecto_id: int, empleado_id: int):
+    enlace = sesion.exec(select(VínculoProyectoEmpleado).where(
+        (VínculoProyectoEmpleado.proyecto_id == proyecto_id) & (VínculoProyectoEmpleado.empleado_id == empleado_id)
+    )).first()
+    if not enlace:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Asignación no encontrada")
+    sesion.delete(enlace)
+    sesion.commit()
+    return {"ok": True}
+
+def proyectos_de_empleado(sesion: Session, empleado_id: int):
+    emp = obtener_empleado(sesion, empleado_id)
+    return emp.proyectos
+
+def empleados_de_proyecto(sesion: Session, proyecto_id: int):
+    proj = obtener_proyecto(sesion, proyecto_id)
+    return proj.empleados
