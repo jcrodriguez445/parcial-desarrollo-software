@@ -2,7 +2,6 @@ from sqlmodel import select, Session
 from fastapi import HTTPException, status
 from app.modelos import Empleado, Proyecto, VínculoProyectoEmpleado
 
-# ----- EMPLEADOS -----
 
 def crear_empleado(sesion: Session, empleado: Empleado):
     sesion.add(empleado)
@@ -50,7 +49,6 @@ def eliminar_empleado(sesion: Session, empleado_id: int):
     )
     sesion.add(historial)
 
-    # Eliminar vínculos
     vínculos = sesion.exec(select(VínculoProyectoEmpleado).where(VínculoProyectoEmpleado.empleado_id == emp.id)).all()
     for v in vínculos:
         sesion.delete(v)
@@ -59,7 +57,7 @@ def eliminar_empleado(sesion: Session, empleado_id: int):
     sesion.commit()
     return {"ok": True, "mensaje": "Empleado eliminado y registrado en historial"}
 
-# ----- PROYECTOS -----
+
 
 def crear_proyecto(sesion: Session, proyecto: Proyecto):
     existe = sesion.exec(select(Proyecto).where(Proyecto.nombre == proyecto.nombre)).first()
@@ -95,7 +93,7 @@ def eliminar_proyecto(sesion: Session, proyecto_id: int, cascada: bool = False):
     if vínculos and not cascada:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Proyecto tiene empleados asignados. Use cascada para eliminar")
 
-    # Guardar en historial antes de eliminar
+
     historial = HistorialProyectoEliminado(
         nombre=proj.nombre,
         descripcion=proj.descripcion,
@@ -121,8 +119,6 @@ def actualizar_proyecto(sesion: Session, proyecto_id: int, datos: dict):
     sesion.refresh(proyecto)
     return proyecto
 
-
-# ----- ASIGNACIONES -----
 
 def asignar_empleado(sesion: Session, proyecto_id: int, empleado_id: int):
     obtener_proyecto(sesion, proyecto_id)
