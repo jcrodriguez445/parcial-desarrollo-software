@@ -6,14 +6,11 @@ from app.modelos import Empleado, EmpleadoCrear, EmpleadoLeer, Proyecto, Proyect
 import app.crud as crud
 
 
-
 app = FastAPI(title="Sistema de Gestión de Proyectos - Parcial", version="1.0")
 
 @app.on_event("startup")
 def startup():
     inicializar_bd()
-
-# ----- EMPLEADOS -----
 
 @app.post("/empleados", response_model=EmpleadoLeer, status_code=201)
 def crear_empleado_endpoint(empleado: EmpleadoCrear, sesion: Session = Depends(obtener_sesion)):
@@ -36,7 +33,6 @@ def actualizar_empleado_endpoint(empleado_id: int, payload: EmpleadoCrear, sesio
 def eliminar_empleado_endpoint(empleado_id: int, sesion: Session = Depends(obtener_sesion)):
     return crud.eliminar_empleado(sesion, empleado_id)
 
-# ----- PROYECTOS -----
 
 @app.post("/proyectos", response_model=ProyectoLeer, status_code=201)
 def crear_proyecto_endpoint(proyecto: ProyectoCrear, sesion: Session = Depends(obtener_sesion)):
@@ -60,8 +56,6 @@ def actualizar_proyecto_endpoint(proyecto_id: int, payload: ProyectoCrear, sesio
     return crud.actualizar_proyecto(sesion, proyecto_id, payload.dict())
 
 
-# ----- ASIGNACIONES -----
-
 @app.post("/proyectos/{proyecto_id}/asignar/{empleado_id}")
 def asignar_empleado_endpoint(proyecto_id: int, empleado_id: int, sesion: Session = Depends(obtener_sesion)):
     return crud.asignar_empleado(sesion, proyecto_id, empleado_id)
@@ -75,7 +69,6 @@ def reasignar_gerente_endpoint(proyecto_id: int, nuevo_gerente_id: int, sesion: 
     return crud.reasignar_gerente(sesion, proyecto_id, nuevo_gerente_id)
 
 
-# ----- CONSULTAS RELACIONALES -----
 
 @app.get("/empleados/{empleado_id}/proyectos", response_model=List[ProyectoLeer])
 def proyectos_del_empleado_endpoint(empleado_id: int, sesion: Session = Depends(obtener_sesion)):
