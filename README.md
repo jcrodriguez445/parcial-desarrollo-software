@@ -1,6 +1,6 @@
 #  Sistema de Gestión de Proyectos - FastAPI
 
-Este proyecto es una **API RESTful** desarrollada con **FastAPI** y **SQLModel** que permite gestionar **empleados** y **proyectos**, manteniendo relaciones entre ambos.  
+Este proyecto es una **API ** desarrollada con **FastAPI** y **SQLModel** que permite gestionar **empleados** y **proyectos**, manteniendo relaciones entre ambos.  
 Incluye operaciones CRUD completas, validaciones, manejo de errores, y documentación automática con Swagger UI y Redoc.
 
 ---
@@ -119,8 +119,6 @@ uvicorn app.main:app --reload
 
 ```bash
 POST /empleados/
-Content-Type: application/json
-
 {
   "nombre": "Carlos Gómez",
   "puesto": "Desarrollador Backend"
@@ -131,8 +129,6 @@ Content-Type: application/json
 
 ```bash
 POST /proyectos/
-Content-Type: application/json
-
 {
   "nombre": "Sistema Interno",
   "descripcion": "Aplicación interna de gestión",
@@ -144,7 +140,6 @@ Content-Type: application/json
 
 ```bash
 PATCH /proyectos/1/reasignar-gerente
-Content-Type: application/json
 
 {
   "nuevo_gerente_id": 2
@@ -155,7 +150,6 @@ Content-Type: application/json
 
 ```bash
 PUT /proyectos/1
-Content-Type: application/json
 
 {
   "nombre": "Sistema Interno V2",
@@ -193,8 +187,9 @@ Content-Type: application/json
 ##  Autor
 
 **Nombre:** *Juan Carlos Rodriguez Sanchez*  
-**Proyecto Académico - Gestión de Proyectos con FastAPI*  
+**Proyecto - Gestión de Proyectos con FastAPI*  
 
 
 ---
+
 
