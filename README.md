@@ -13,7 +13,7 @@ Incluye operaciones CRUD completas, validaciones, manejo de errores, y documenta
 - Registro histórico de eliminaciones.  
 - Uso de **SQLModel** (SQLAlchemy + Pydantic).  
 - Manejo de errores HTTP (400, 404, 422, etc.).  
-- Documentación interactiva en `/docs` y `/redoc`.
+- Documentación interactiva en `/docs` 
 
 ---
 
@@ -52,8 +52,8 @@ cd project-management
 
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate   # En Linux/Mac
-.venv\Scripts\activate    # En Windows
+source .venv/bin/activate  
+.venv\Scripts\activate    
 ```
 
 ### 3 Instalar dependencias
@@ -180,7 +180,7 @@ Content-Type: application/json
 
 ---
 
-## 🧠 Tecnologías Usadas
+##  Tecnologías Usadas
 
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [SQLModel](https://sqlmodel.tiangolo.com/)
@@ -190,10 +190,11 @@ Content-Type: application/json
 
 ---
 
-## 👨‍💻 Autor
+##  Autor
 
 **Nombre:** *Juan Carlos Rodriguez Sanchez*  
 **Proyecto Académico - Gestión de Proyectos con FastAPI*  
 
 
 ---
+
